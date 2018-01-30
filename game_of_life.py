@@ -78,7 +78,7 @@ class Table:
 
 		return neighbors
 
-	def checkCell(self, cell):
+	def processCell(self, cell):
 		neighbors = self.neighbors(cell)
 		print(str(len(neighbors))+": ", end="")
 		result = 0
@@ -90,14 +90,18 @@ class Table:
 
 		print(str(neighbors_alive) + ", " + str(result))		
 
-		if neighbors_alive < 2:
-			result = 0
-		elif neighbors_alive > 3:
-			result = 2
+		if cell.alive == 1:
+			if neighbors_alive < 2:
+				cell.die()
+			elif neighbors_alive > 3:
+				cell.die()
+			else:
+				None
 		else:
-			result = 1
-			if neighbors_alive == 3 and cell.alive == 0:
-				result = 3
+			if neighbors_alive == 3:
+				cell.live()
+			else: 
+				None
 
 
 		return result
@@ -106,13 +110,7 @@ class Table:
 	def process(self):
 		for row in self.cells:
 			for cell in row:
-				result = self.checkCell(cell)
-				if cell.alive == 1:
-					if result == 0 or result == 2:
-						cell.die()
-				else:
-					if result == 3:
-						cell.live()
+				self.processCell(cell)
 
 
 
