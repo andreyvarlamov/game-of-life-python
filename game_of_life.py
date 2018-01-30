@@ -40,8 +40,8 @@ class Table:
 		return neighbors
 
 class Game:
-table_size_x = 64
-table_size_y = 64
+	table_size_x = 64
+	table_size_y = 64
 
 
 
