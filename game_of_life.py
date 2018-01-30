@@ -131,8 +131,8 @@ class Table:
 
 
 
-table_size_x = 40
-table_size_y = 40
+table_size_x = 64
+table_size_y = 64
 
 table = Table(table_size_x, table_size_y)
 
@@ -141,7 +141,7 @@ while True:
 	os.system('cls')
 	print("Generation " + str(iteration))
 	gol_display.printTable(table)
-	time.sleep(0.3)
+	time.sleep(0.2)
 	table.process()
 	iteration += 1
 
