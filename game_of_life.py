@@ -6,6 +6,8 @@ class Cell:
 	pos_x = 0
 	pos_y = 0
 	alive = 1
+	will_die = 0
+	will_live = 0
 
 	def __init__(self, pos_x , pos_y, alive):
 		self.pos_x = pos_x
@@ -51,34 +53,40 @@ class Table:
 		except IndexError:
 			None
 
-		try:	
-			neighbors.append(self.cells[cell.pos_x+1][cell.pos_y-1])
-		except IndexError:
-			None
+		if cell.pos_y != 0:
+			try:	
+				neighbors.append(self.cells[cell.pos_x+1][cell.pos_y-1])
+			except IndexError:
+				None
 	
-		try:
-			neighbors.append(self.cells[cell.pos_x][cell.pos_y-1])
-		except IndexError:
-			None
-	
-		try:
-			neighbors.append(self.cells[cell.pos_x-1][cell.pos_y-1])
-		except IndexError:
-			None
+			try:
+				neighbors.append(self.cells[cell.pos_x][cell.pos_y-1])
+			except IndexError:
+				None
 
-		try:
-			neighbors.append(self.cells[cell.pos_x-1][cell.pos_y])
-		except IndexError:
-			None
+
+		if cell.pos_x != 0 and cell.pos_y != 0:
+			try:
+				neighbors.append(self.cells[cell.pos_x-1][cell.pos_y-1])
+			except IndexError:
+				None
+
+
+		if cell.pos_x != 0:
+			try:
+				neighbors.append(self.cells[cell.pos_x-1][cell.pos_y])
+			except IndexError:
+				None
 	
-		try:
-			neighbors.append(self.cells[cell.pos_x-1][cell.pos_y+1])
-		except IndexError:
-			None
+			try:
+				neighbors.append(self.cells[cell.pos_x-1][cell.pos_y+1])
+			except IndexError:
+				None
+
 
 		return neighbors
 
-	def processCell(self, cell):
+	def checkCell(self, cell):
 		neighbors = self.neighbors(cell)
 		print(str(len(neighbors))+": ", end="")
 		result = 0
@@ -88,26 +96,36 @@ class Table:
 			if neighbor.alive == 1:
 				neighbors_alive += 1
 
-		print(str(neighbors_alive) + ", " + str(result))		
+		print(str(neighbors_alive))		
 
 		if cell.alive == 1:
 			if neighbors_alive < 2:
-				cell.die()
+				cell.will_die = 1
 			elif neighbors_alive > 3:
-				cell.die()
+				cell.will_die = 1
 			else:
 				None
 		else:
 			if neighbors_alive == 3:
-				cell.live()
+				cell.will_live = 1
 			else: 
 				None
 
+	def processCell(self, cell):
+		if cell.will_live == 1:
+			cell.will_live = 0
+			cell.live()
 
-		return result
+		if cell.will_die == 1:
+			cell.will_die = 0
+			cell.die()
 
 
 	def process(self):
+		for row in self.cells:
+			for cell in row:
+				self.checkCell(cell)
+
 		for row in self.cells:
 			for cell in row:
 				self.processCell(cell)
