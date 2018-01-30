@@ -1,5 +1,7 @@
 import gol_display
 import random
+import os
+import time
 
 # class for a cell
 class Cell:
@@ -88,15 +90,12 @@ class Table:
 
 	def checkCell(self, cell):
 		neighbors = self.neighbors(cell)
-		print(str(len(neighbors))+": ", end="")
 		result = 0
 		neighbors_alive = 0 
 		#underpopulation, normal, overpopulation, reproduction
 		for neighbor in neighbors:
 			if neighbor.alive == 1:
 				neighbors_alive += 1
-
-		print(str(neighbors_alive))		
 
 		if cell.alive == 1:
 			if neighbors_alive < 2:
@@ -132,15 +131,19 @@ class Table:
 
 
 
-table_size_x = 3
-table_size_y = 3
+table_size_x = 40
+table_size_y = 40
 
 table = Table(table_size_x, table_size_y)
 
-gol_display.printTable(table)
-input("Press Enter to continue...")
-table.process()
-gol_display.printTable(table)
+iteration = 0
+while True:
+	os.system('cls')
+	print("Generation " + str(iteration))
+	gol_display.printTable(table)
+	time.sleep(0.3)
+	table.process()
+	iteration += 1
 
 
 
