@@ -134,7 +134,7 @@ class Table:
 
 
 
-table_size = 50
+table_size = 100
 
 table = Table(table_size)
 
