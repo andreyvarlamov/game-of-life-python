@@ -1,4 +1,5 @@
 import gol_display
+import gol_gui
 import random
 import os
 import time
@@ -24,16 +25,18 @@ class Cell:
 
 class Table:
 	cells = []
+	size = 0
 
-	def __init__(self, size_x, size_y):
-		self.generateCells(size_x, size_y)
+	def __init__(self, size):
+		self.size = size
+		self.generateCells()
 
 
-	def generateCells(self, size_x, size_y):
-		for i in range(0, table_size_x):
+	def generateCells(self):
+		for i in range(0, self.size):
 			cell_row = []
-			for j in range(0, table_size_y):
-				cell_row.append(Cell(i, j, random.randint(0,1)))\
+			for j in range(0, self.size):
+				cell_row.append(Cell(i, j, random.randint(0,1)))
 
 			self.cells.append(cell_row)
 
@@ -131,19 +134,22 @@ class Table:
 
 
 
-table_size_x = 64
-table_size_y = 64
+table_size = 100
 
-table = Table(table_size_x, table_size_y)
+table = Table(table_size)
 
 iteration = 0
-while True:
+"""while True:
 	os.system('cls')
 	print("Generation " + str(iteration))
 	gol_display.printTable(table)
 	time.sleep(0.2)
 	table.process()
-	iteration += 1
+	iteration += 1"""
+
+gameGui = gol_gui.GameGui(table)
+
+
 
 
 
