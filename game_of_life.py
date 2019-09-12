@@ -138,15 +138,6 @@ table_size = 100
 
 table = Table(table_size)
 
-iteration = 0
-"""while True:
-	os.system('cls')
-	print("Generation " + str(iteration))
-	gol_display.printTable(table)
-	time.sleep(0.2)
-	table.process()
-	iteration += 1"""
-
 gameGui = gol_gui.GameGui(table)
 
 
