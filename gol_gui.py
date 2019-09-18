@@ -36,7 +36,9 @@ class GameGui:
 		cell_x = x // SIZE_MUL
 		cell_y = y // SIZE_MUL
 
-		self.table.cells[cell_x][cell_y].alive = 1
-		self.update_canvas()
+		print('Before: {}, {}, {}'.format(cell_x, cell_y, self.table.cells[cell_x][cell_y].alive))
 
-		print('{}, {}'.format(cell_x, cell_y))
+		self.table.cells[cell_x][cell_y].alive = 1
+		# self.update_canvas()
+
+		print('After: {}, {}, {}'.format(cell_x, cell_y, self.table.cells[cell_x][cell_y].alive))
