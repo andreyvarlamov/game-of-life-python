@@ -4,137 +4,89 @@ import random
 import os
 import time
 
-# class for a cell
-class Cell:
-	pos_x = 0
-	pos_y = 0
-	alive = 1
-	will_die = 0
-	will_live = 0
+# # class for a cell
+# class Cell:
+# 	posX = 0
+# 	posY = 0
+# 	alive = 0
 
-	def __init__(self, pos_x , pos_y, alive):
-		self.pos_x = pos_x
-		self.pos_y = pos_y
-		self.alive = alive
+# 	def __init__(self, posX , posY, alive):
+# 		self.posX = posX
+# 		self.posY = posY
+# 		self.alive = alive
 
-	def die(self):
-		self.alive = 0
+# 	def die(self):
+# 		self.alive = 0
 
-	def live(self):
-		self.alive = 1
+# 	def live(self):
+# 		self.alive = 1
 
 class Table:
-	cells = []
-	size = 0
-
 	def __init__(self, size):
 		self.size = size
 		self.generateCells()
 
 
-	def generateCells(self):
-		for i in range(0, self.size):
-			cell_row = []
-			for j in range(0, self.size):
-				cell_row.append(Cell(i, j, random.randint(0,1)))
-
-			self.cells.append(cell_row)
-
-
-	def neighbors(self, cell):
-		neighbors = []
-		try:
-			neighbors.append(self.cells[cell.pos_x][cell.pos_y+1])
-		except IndexError:
-			None
-
-		try:	
-			neighbors.append(self.cells[cell.pos_x+1][cell.pos_y+1])
-		except IndexError:
-			None
-
-		try:
-			neighbors.append(self.cells[cell.pos_x+1][cell.pos_y])
-		except IndexError:
-			None
-
-		if cell.pos_y != 0:
-			try:	
-				neighbors.append(self.cells[cell.pos_x+1][cell.pos_y-1])
-			except IndexError:
-				None
-	
-			try:
-				neighbors.append(self.cells[cell.pos_x][cell.pos_y-1])
-			except IndexError:
-				None
-
-
-		if cell.pos_x != 0 and cell.pos_y != 0:
-			try:
-				neighbors.append(self.cells[cell.pos_x-1][cell.pos_y-1])
-			except IndexError:
-				None
-
-
-		if cell.pos_x != 0:
-			try:
-				neighbors.append(self.cells[cell.pos_x-1][cell.pos_y])
-			except IndexError:
-				None
-	
-			try:
-				neighbors.append(self.cells[cell.pos_x-1][cell.pos_y+1])
-			except IndexError:
-				None
-
-
-		return neighbors
-
-	def checkCell(self, cell):
-		neighbors = self.neighbors(cell)
-		result = 0
-		neighbors_alive = 0 
-		#underpopulation, normal, overpopulation, reproduction
-		for neighbor in neighbors:
-			if neighbor.alive == 1:
-				neighbors_alive += 1
-
-		if cell.alive == 1:
-			if neighbors_alive < 2:
-				cell.will_die = 1
-			elif neighbors_alive > 3:
-				cell.will_die = 1
-			else:
-				None
+	def generateCells(self, empty=1):
+		if empty:
+			self.cells = [[[0,0] for x in range(self.size)] for y in range(self.size)]
 		else:
-			if neighbors_alive == 3:
-				cell.will_live = 1
-			else: 
+			randInt = random.randint(0,1)
+			self.cells = [[[randInt,randInt] for x in range(self.size)] for y in range(self.size)]
+
+
+	def countNeighbors(self, x, y):
+		neighborCount = 0
+		neighborOffsets = [(1,0), (1,1), (0,1), (-1,1), (-1,0), (-1,-1), (0,-1), (1,-1)]
+
+		for offset in neighborOffsets:
+			try:
+				if self.cells[x + offset[0]][y + offset[1]][0] == 1:
+					neighborCount += 1
+			except IndexError:
 				None
 
-	def processCell(self, cell):
-		if cell.will_live == 1:
-			cell.will_live = 0
-			cell.live()
 
-		if cell.will_die == 1:
-			cell.will_die = 0
-			cell.die()
+		return neighborCount
+
+
+	def checkCell(self, x, y):
+		neighborCount = self.countNeighbors(x, y)
+
+		if self.cells[x][y][0] == 1:
+			if neighborCount < 2 or neighborCount > 3:
+				self.cells[x][y][1] = 0
+			else:
+				self.cells[x][y][1] = 1
+
+
+		else:
+			if neighborCount == 3:
+				self.cells[x][y][1] = 1
+			else:
+				self.cells[x][y][1] = 0
+
+		
+	def processCell(self, x, y):
+		self.cells[x][y][0] = self.cells[x][y][1]
 
 
 	def process(self):
-		for row in self.cells:
-			for cell in row:
-				self.checkCell(cell)
+		for x in range(self.size):
+			for y in range(self.size):
+				self.checkCell(x, y)
 
-		for row in self.cells:
-			for cell in row:
-				self.processCell(cell)
+			
+		for x in range(self.size):
+			for y in range(self.size):
+				self.processCell(x, y)
+
+			
 
 
 
-table_size = 100
+
+table_size = 50
 
 table = Table(table_size)
 
