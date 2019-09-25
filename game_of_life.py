@@ -4,35 +4,20 @@ import random
 import os
 import time
 
-# # class for a cell
-# class Cell:
-# 	posX = 0
-# 	posY = 0
-# 	alive = 0
-
-# 	def __init__(self, posX , posY, alive):
-# 		self.posX = posX
-# 		self.posY = posY
-# 		self.alive = alive
-
-# 	def die(self):
-# 		self.alive = 0
-
-# 	def live(self):
-# 		self.alive = 1
-
 class Table:
-	def __init__(self, size):
+	def __init__(self, size, empty=1):
 		self.size = size
-		self.generateCells()
+		self.generateCells(empty)
 
 
-	def generateCells(self, empty=1):
-		if empty:
-			self.cells = [[[0,0] for x in range(self.size)] for y in range(self.size)]
-		else:
-			randInt = random.randint(0,1)
-			self.cells = [[[randInt,randInt] for x in range(self.size)] for y in range(self.size)]
+	def generateCells(self, empty):
+		self.cells = [[[0,0] for x in range(self.size)] for y in range(self.size)]
+		
+		if not empty:
+			for x in range(self.size):
+				for y in range(self.size):
+					randStatus = random.randint(0,1)
+					self.cells[x][y] = [randStatus, randStatus]
 
 
 	def countNeighbors(self, x, y):
@@ -81,14 +66,8 @@ class Table:
 			for y in range(self.size):
 				self.processCell(x, y)
 
-			
 
-
-
-
-table_size = 50
-
-table = Table(table_size)
+table = Table(50, empty=0)
 
 gameGui = gol_gui.GameGui(table)
 

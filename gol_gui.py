@@ -15,8 +15,8 @@ class GameGui:
 		self.canvas.pack()
 
 		self.canvas.bind(sequence="<Enter>", func=lambda event: self.canvas.focus_set())
-		self.canvas.bind(sequence="<Button-1>", func=self.leftClick)
-		self.canvas.bind(sequence="<B1-Motion>", func=self.leftClick)
+		self.canvas.bind(sequence="<Button-1>", func=self.drawCell)
+		self.canvas.bind(sequence="<B1-Motion>", func=self.drawCell)
 		self.canvas.bind(sequence="<Key>", func=self.toggleRunning)
 		
 		self.updateCanvas()
@@ -50,7 +50,7 @@ class GameGui:
 						self.canvas.create_rectangle(x*SIZE_MUL, y*SIZE_MUL, (x+1)*SIZE_MUL, (y+1)*SIZE_MUL, fill='black', outline="white")
 
 
-	def leftClick(self, event):
+	def drawCell(self, event):
 		if not self.running:
 			x, y = event.x, event.y
 			cell_x = x // SIZE_MUL
