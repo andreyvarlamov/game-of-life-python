@@ -19,26 +19,23 @@ class GameGui:
 		self.canvas.bind(sequence="<B1-Motion>", func=self.drawCell)
 		self.canvas.bind(sequence="<Key>", func=self.toggleRunning)
 		
+		self.initializeCanvas()
 		self.updateCanvas()
 		self.master.mainloop()
 
 
-	def updateCanvas(self):
-		if self.running:
-			self.table.process()
-
-
-		self.canvas.delete("all")
-		for x in range(self.table.size):
-			for y in range(self.table.size):
-				if self.table.cells[x][y][0]:
-						self.canvas.create_rectangle(x*SIZE_MUL, y*SIZE_MUL, (x+1)*SIZE_MUL, (y+1)*SIZE_MUL, fill='black', outline="white")
-
-
-		self.canvas.after(100, self.updateCanvas)
+	def getCoordString(self, x, y):
+		return str(x) + "_" + str(y)
 
 	
-	def flashCanvas(self):
+	def initializeCanvas(self):
+		for x in range(self.table.size):
+			for y in range(self.table.size):
+				self.canvas.create_rectangle(x*SIZE_MUL, y*SIZE_MUL, (x+1)*SIZE_MUL, (y+1)*SIZE_MUL, fill='white', tags=self.getCoordString(x,y))
+
+
+
+	def processAndRedraw(self):
 		if self.running:
 			self.table.process()
 
@@ -47,7 +44,18 @@ class GameGui:
 		for x in range(self.table.size):
 			for y in range(self.table.size):
 				if self.table.cells[x][y][0]:
-						self.canvas.create_rectangle(x*SIZE_MUL, y*SIZE_MUL, (x+1)*SIZE_MUL, (y+1)*SIZE_MUL, fill='black', outline="white")
+					self.canvas.create_rectangle(x*SIZE_MUL, y*SIZE_MUL, (x+1)*SIZE_MUL, (y+1)*SIZE_MUL, fill='blue', tags=self.getCoordString(x,y))
+				else:
+					self.canvas.create_rectangle(x*SIZE_MUL, y*SIZE_MUL, (x+1)*SIZE_MUL, (y+1)*SIZE_MUL, fill='white', tags=self.getCoordString(x,y))
+
+
+	def updateCanvas(self):
+		self.processAndRedraw()
+		self.canvas.after(100, self.updateCanvas)
+
+
+	# def drawGrid(self):
+
 
 
 	def drawCell(self, event):
@@ -58,7 +66,7 @@ class GameGui:
 
 			self.table.cells[cell_x][cell_y][0] = 1
 
-			self.flashCanvas()
+			self.processAndRedraw()
 
 		
 	def toggleRunning(self, event):
